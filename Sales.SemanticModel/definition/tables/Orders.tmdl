@@ -1,0 +1,146 @@
+/// One row per product line in a customer order (Superstore, 2021-2024).
+table Orders
+	lineageTag: b6c136a7-f4e9-4825-b8e1-d457f69889c5
+
+	column 'Row ID'
+		dataType: int64
+		isHidden
+		lineageTag: 79b8d3dd-0f7c-4ec6-bfcb-6fb9332cae54
+		summarizeBy: none
+		sourceColumn: Row ID
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: 95151127-b426-40bf-916c-ee9fe975266e
+		sourceColumn: Order ID
+
+	column 'Order Date'
+		dataType: dateTime
+		isHidden
+		formatString: dd-mmm-yyyy
+		lineageTag: 3d1b01cb-f8c5-4af6-99ec-499a853e0002
+		sourceColumn: Order Date
+
+	column 'Ship Date'
+		dataType: dateTime
+		formatString: dd-mmm-yyyy
+		lineageTag: e51ef4e2-76d0-4726-95fc-f617aa1e30dc
+		sourceColumn: Ship Date
+
+	column 'Ship Mode'
+		dataType: string
+		lineageTag: 25f25027-93a3-41b7-824d-584f8de9f885
+		sourceColumn: Ship Mode
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: ef7c126d-28bb-4c67-a84b-8c2dca47cd5f
+		sourceColumn: Customer ID
+
+	column 'Customer Name'
+		dataType: string
+		lineageTag: ac1dff7f-8eb3-4ee0-9338-1c431ddce257
+		sourceColumn: Customer Name
+
+	column Segment
+		dataType: string
+		lineageTag: e19812fb-5f4f-468b-9e64-30d56952074e
+		sourceColumn: Segment
+
+	column Country/Region
+		dataType: string
+		lineageTag: cd698f0c-38c2-40ee-8526-98ba54afccc3
+		dataCategory: Country
+		sourceColumn: Country/Region
+
+	column City
+		dataType: string
+		lineageTag: f3f5bc0e-da5a-4a89-9f17-a348702e5b2b
+		dataCategory: City
+		sourceColumn: City
+
+	column State/Province
+		dataType: string
+		lineageTag: 20ead705-82f1-46d8-9168-d20f5e3de7bc
+		dataCategory: StateOrProvince
+		sourceColumn: State/Province
+
+	column 'Postal Code'
+		dataType: string
+		lineageTag: 5d623f48-f089-4617-b754-7515e4df0545
+		dataCategory: PostalCode
+		sourceColumn: Postal Code
+
+	column Region
+		dataType: string
+		lineageTag: 01755bff-ce52-472b-ac08-2a1b458c4c7f
+		sourceColumn: Region
+
+	column 'Product ID'
+		dataType: string
+		lineageTag: aba24c99-f349-4a63-aa27-2a80ab9b8208
+		sourceColumn: Product ID
+
+	column Category
+		dataType: string
+		lineageTag: 61879dcd-0241-44da-9071-bc9ab4b157f8
+		sourceColumn: Category
+
+	column Sub-Category
+		dataType: string
+		lineageTag: d00b8227-d17d-4760-8f2b-8b8dc9215601
+		sourceColumn: Sub-Category
+
+	column 'Product Name'
+		dataType: string
+		lineageTag: e85525f7-1c80-4188-9bd8-54474b92b60a
+		sourceColumn: Product Name
+
+	column Sales
+		dataType: double
+		isHidden
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: ae6bb1f0-ae3f-422b-97c1-79c0e15bf899
+		summarizeBy: sum
+		sourceColumn: Sales
+
+	column Quantity
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 99ec3187-2b46-4db3-bdcd-e3c7a2258259
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+	column Discount
+		dataType: double
+		formatString: 0%
+		lineageTag: 977c0389-9824-453c-a36b-1de01285938b
+		summarizeBy: none
+		sourceColumn: Discount
+
+	column Profit
+		dataType: double
+		isHidden
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: aef12d02-06cf-48c0-a7d7-ccdb79418061
+		summarizeBy: sum
+		sourceColumn: Profit
+
+	partition Orders = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\amande\OneDrive - Capgemini\Desktop\Sales\Sample - Superstore.xls"), null, true),
+				    OrdersSheet = Source{[Name="Orders"]}[Data],
+				    Promoted = Table.PromoteHeaders(OrdersSheet, [PromoteAllScalars=true]),
+				    NonBlank = Table.SelectRows(Promoted, each [Row ID] <> null and [Row ID] <> ""),
+				    Typed = Table.TransformColumnTypes(NonBlank, {
+				        {"Row ID", Int64.Type}, {"Order ID", type text}, {"Order Date", type date}, {"Ship Date", type date},
+				        {"Ship Mode", type text}, {"Customer ID", type text}, {"Customer Name", type text}, {"Segment", type text},
+				        {"Country/Region", type text}, {"City", type text}, {"State/Province", type text}, {"Postal Code", type text},
+				        {"Region", type text}, {"Product ID", type text}, {"Category", type text}, {"Sub-Category", type text},
+				        {"Product Name", type text}, {"Sales", type number}, {"Quantity", Int64.Type}, {"Discount", type number}, {"Profit", type number}})
+				in
+				    Typed
+

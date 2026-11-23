@@ -1,0 +1,8 @@
+relationship Orders_OrderDate_Date
+	fromColumn: Orders.'Order Date'
+	toColumn: Date.Date
+
+relationship Orders_Region_People
+	fromColumn: Orders.Region
+	toColumn: People.Region
+
