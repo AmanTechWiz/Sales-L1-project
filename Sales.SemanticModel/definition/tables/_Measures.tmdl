@@ -1,0 +1,164 @@
+/// Holds all report measures.
+table _Measures
+	lineageTag: 86131382-21b9-4bbc-ba4d-142ff5ed3f53
+
+	/// Sales for the years in filter context (the 'current year' when one year is selected).
+	measure 'CY Sales' = SUM ( Orders[Sales] )
+		formatString: \$#,0,"K"
+		displayFolder: 1 Base
+		lineageTag: 067c94f0-2d51-4f8d-9af0-08d76bf998aa
+
+	measure 'CY Profit' = SUM ( Orders[Profit] )
+		formatString: \$#,0,"K";-\$#,0,"K";\$0"K"
+		displayFolder: 1 Base
+		lineageTag: e3e87a65-8640-4c88-a568-e60f163d1cd1
+
+	measure 'CY Qty' = SUM ( Orders[Quantity] )
+		formatString: #,0
+		displayFolder: 1 Base
+		lineageTag: a15f1105-149f-4288-9aef-a147c6c5677c
+
+	measure 'PY Sales' = CALCULATE ( [CY Sales], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: \$#,0,"K"
+		displayFolder: 2 PY
+		lineageTag: f67cb0d4-e67f-47cf-b1f1-46264943c3bd
+
+	measure 'PY Profit' = CALCULATE ( [CY Profit], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: \$#,0,"K";-\$#,0,"K";\$0"K"
+		displayFolder: 2 PY
+		lineageTag: 49f6443e-746f-42f0-abcb-2422da34b82f
+
+	measure 'PY Qty' = CALCULATE ( [CY Qty], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: #,0
+		displayFolder: 2 PY
+		lineageTag: 56d332e2-2dae-49d3-8fcf-cb9fb93e81af
+
+	measure 'YoY Sales' = DIVIDE ( [CY Sales] - [PY Sales], [PY Sales] )
+		formatString: ▲ 0.0%;▼ 0.0%;0.0%
+		displayFolder: 3 YoY
+		lineageTag: ed639a84-260d-4722-a35c-afbc9c12df6c
+
+	/// Divides by ABS(PY) so the sign is right even if PY profit was negative.
+	measure 'YoY Profit' = DIVIDE ( [CY Profit] - [PY Profit], ABS ( [PY Profit] ) )
+		formatString: ▲ 0.0%;▼ 0.0%;0.0%
+		displayFolder: 3 YoY
+		lineageTag: 1ef0baf6-3aaa-4d29-a9cf-9b99b45d002b
+
+	measure 'YoY Qty' = DIVIDE ( [CY Qty] - [PY Qty], [PY Qty] )
+		formatString: ▲ 0.0%;▼ 0.0%;0.0%
+		displayFolder: 3 YoY
+		lineageTag: c6084cdc-c3e4-41fd-80f7-c2c8bf9688ac
+
+	measure 'Selected Metric Name' = SELECTEDVALUE ( Metric[Metric], "Sales" )
+		displayFolder: 4 Dynamic
+		lineageTag: fcd563cd-3838-41e8-9034-9fabff98f4bc
+
+	/// CY value of the metric picked in the Metric slicer (default Sales).
+	measure 'Selected Metric' =
+			SWITCH ( [Selected Metric Name],
+			    "Sales", [CY Sales],
+			    "Profit", [CY Profit],
+			    "Quantity", [CY Qty]
+			)
+		displayFolder: 4 Dynamic
+		lineageTag: 3dc5c230-5ba1-4712-91de-587ebd69f00d
+
+		formatStringDefinition = IF ( [Selected Metric Name] = "Quantity", "#,0", "\$#,0;-\$#,0;\$#,0" )
+
+	measure 'PY Selected Metric' =
+			SWITCH ( [Selected Metric Name],
+			    "Sales", [PY Sales],
+			    "Profit", [PY Profit],
+			    "Quantity", [PY Qty]
+			)
+		displayFolder: 4 Dynamic
+		lineageTag: 78accdb2-60d5-4a2f-ab53-c69242c46629
+
+		formatStringDefinition = IF ( [Selected Metric Name] = "Quantity", "#,0", "\$#,0;-\$#,0;\$#,0" )
+
+	measure 'YoY Selected Metric' = DIVIDE ( [Selected Metric] - [PY Selected Metric], ABS ( [PY Selected Metric] ) )
+		formatString: ▲ 0.0%;▼ 0.0%;0.0%
+		displayFolder: 4 Dynamic
+		lineageTag: 25db934e-cab7-4e07-b122-143d1020feb4
+
+	/// Average monthly value of the selected metric for the selected year; same on every bar, so it can be used as a line or for colour rules.
+	measure 'Monthly Avg Selected Metric' =
+			CALCULATE (
+			    AVERAGEX ( VALUES ( 'Date'[Month No] ), [Selected Metric] ),
+			    REMOVEFILTERS ( 'Date'[Month], 'Date'[Month No] )
+			)
+		displayFolder: 4 Dynamic
+		lineageTag: 76875d90-27c8-41a8-adce-09190af7b2ac
+
+		formatStringDefinition = IF ( [Selected Metric Name] = "Quantity", "#,0", "\$#,0;-\$#,0;\$#,0" )
+
+	measure 'Selected Year' = IF ( HASONEVALUE ( 'Date'[Year] ), FORMAT ( VALUES ( 'Date'[Year] ), "0" ), "All years" )
+		displayFolder: 5 Labels & Colors
+		lineageTag: 498978cd-b979-459a-80bc-7e399ae4cccb
+
+	measure 'KPI Title' = [Selected Metric Name] & " " & [Selected Year]
+		displayFolder: 5 Labels & Colors
+		lineageTag: b42dc60a-de40-4892-8713-11970b753d39
+
+	measure 'Regional Manager' =
+			VAR _Region = COALESCE ( SELECTEDVALUE ( Orders[Region] ), SELECTEDVALUE ( People[Region] ) )
+			RETURN LOOKUPVALUE ( People[Regional Manager], People[Region], _Region )
+		displayFolder: 5 Labels & Colors
+		lineageTag: 85c1280a-a8ee-4d4d-b76c-ca97b058536f
+
+	measure 'PY Sales Label' =
+			IF ( ISBLANK ( [PY Sales] ), "PY Sales: n/a",
+			    "PY Sales: " & FORMAT ( [PY Sales], "$#,0" )
+			        & "  " & IF ( [YoY Sales] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [YoY Sales] ), "0.0%" )
+			)
+		displayFolder: 5 Labels & Colors
+		lineageTag: 82e20572-1db9-4e60-8ebe-8aebc567065b
+
+	measure 'PY Selected Label' =
+			VAR _fmt = IF ( [Selected Metric Name] = "Quantity", "#,0", "$#,0" )
+			RETURN
+			IF ( ISBLANK ( [PY Selected Metric] ), "PY: n/a",
+			    "PY " & [Selected Metric Name] & ": " & FORMAT ( [PY Selected Metric], _fmt )
+			        & "  " & IF ( [YoY Selected Metric] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [YoY Selected Metric] ), "0.0%" )
+			)
+		displayFolder: 5 Labels & Colors
+		lineageTag: 471cb8b2-6fe8-4698-9dd4-86972a4a725a
+
+	measure 'YoY Sales Color' = SWITCH ( TRUE (), ISBLANK ( [YoY Sales] ), "#808080", [YoY Sales] >= 0, "#1A7F4B", "#C0362C" )
+		displayFolder: 5 Labels & Colors
+		lineageTag: 91a7741d-cc7c-4368-a3fc-87093a841caa
+
+	measure 'YoY Selected Color' = SWITCH ( TRUE (), ISBLANK ( [YoY Selected Metric] ), "#808080", [YoY Selected Metric] >= 0, "#1A7F4B", "#C0362C" )
+		displayFolder: 5 Labels & Colors
+		lineageTag: fefb43c0-e4ed-4345-b2d3-e2da9dfc8392
+
+	/// Darker bar when the month is at/above the monthly average, lighter when below.
+	measure 'Bar Color vs Avg' = IF ( [Selected Metric] >= [Monthly Avg Selected Metric], "#2B5FD9", "#B8C7EE" )
+		displayFolder: 5 Labels & Colors
+		lineageTag: c61e6727-ba9e-4eae-be7f-a30a2391aedc
+
+	/// Dynamic KPI card title, e.g. 'Central  ·  Sales 2024' (region comes from the visual-level filter).
+	measure 'Card Title' =
+			VAR _Region = SELECTEDVALUE ( Orders[Region], "All Regions" )
+			RETURN _Region & "  ·  " & [KPI Title]
+		displayFolder: 5 Labels & Colors
+		lineageTag: cf55b70b-c0d8-4ff3-957d-3bdc3a21e26b
+
+	measure 'YoY Profit Color' = SWITCH ( TRUE (), ISBLANK ( [YoY Profit] ), "#808080", [YoY Profit] >= 0, "#1A7F4B", "#C0362C" )
+		displayFolder: 5 Labels & Colors
+		lineageTag: 20ace8b5-b462-43a6-92b1-69dc0811588b
+
+	measure 'YoY Qty Color' = SWITCH ( TRUE (), ISBLANK ( [YoY Qty] ), "#808080", [YoY Qty] >= 0, "#1A7F4B", "#C0362C" )
+		displayFolder: 5 Labels & Colors
+		lineageTag: 57b5673a-9feb-45ce-b9fb-1c92ad0dab5a
+
+	column Placeholder
+		isHidden
+		lineageTag: a3736b9c-e071-42dc-9274-e057bf37a97e
+		isNameInferred
+		sourceColumn: [Placeholder]
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW ( "Placeholder", BLANK () )
+

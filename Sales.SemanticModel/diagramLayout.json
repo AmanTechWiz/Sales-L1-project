@@ -1,0 +1,87 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 88
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 347.04971604557738,
+            "y": 330
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "86131382-21b9-4bbc-ba4d-142ff5ed3f53",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 685.38305001469359,
+            "y": 29
+          },
+          "nodeIndex": "Date",
+          "nodeLineageTag": "42fbdce6-c0a6-42f1-bba3-25f1973adaf4",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 52.716378261764021,
+            "y": 251
+          },
+          "nodeIndex": "Metric",
+          "nodeLineageTag": "be285a02-d9d1-4f2d-bf6c-a8fffa1b5b28",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.20156119318517,
+            "y": -21.5776510200771
+          },
+          "nodeIndex": "Orders",
+          "nodeLineageTag": "b6c136a7-f4e9-4825-b8e1-d457f69889c5",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 61.562761799675627
+          },
+          "nodeIndex": "People",
+          "nodeLineageTag": "5fe38a54-7568-45e8-ab89-57452a76e252",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

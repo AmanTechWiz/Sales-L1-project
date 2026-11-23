@@ -1,0 +1,26 @@
+/// Regional manager for each region.
+table People
+	lineageTag: 5fe38a54-7568-45e8-ab89-57452a76e252
+
+	column 'Regional Manager'
+		dataType: string
+		lineageTag: d0d7b11c-de1e-4f72-8039-115e59879cfc
+		sourceColumn: Regional Manager
+
+	column Region
+		dataType: string
+		lineageTag: e7fef0f4-cdfb-4784-b941-3f23f9a968ad
+		sourceColumn: Region
+
+	partition People = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\amande\OneDrive - Capgemini\Desktop\Sales\Sample - Superstore.xls"), null, true),
+				    PeopleSheet = Source{[Name="People"]}[Data],
+				    Promoted = Table.PromoteHeaders(PeopleSheet, [PromoteAllScalars=true]),
+				    NonBlank = Table.SelectRows(Promoted, each [Region] <> null and [Region] <> ""),
+				    Typed = Table.TransformColumnTypes(NonBlank, {{"Regional Manager", type text}, {"Region", type text}})
+				in
+				    Typed
+

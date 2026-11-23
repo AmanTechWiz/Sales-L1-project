@@ -1,0 +1,110 @@
+{
+  "name": "Sales Overview",
+  "dataColors": [
+    "#2B5FD9",
+    "#F28E2B",
+    "#1A7F4B",
+    "#C0362C",
+    "#7B61FF",
+    "#00A3AD",
+    "#B8C7EE",
+    "#E1A100"
+  ],
+  "foreground": "#1D1D1B",
+  "foregroundNeutralSecondary": "#5F5F5A",
+  "foregroundNeutralTertiary": "#8A8A84",
+  "background": "#FFFFFF",
+  "backgroundLight": "#F7F7F5",
+  "backgroundNeutral": "#E3E3DE",
+  "tableAccent": "#2B5FD9",
+  "good": "#1A7F4B",
+  "neutral": "#808080",
+  "bad": "#C0362C",
+  "maximum": "#2B5FD9",
+  "center": "#B8C7EE",
+  "minimum": "#F3F4F6",
+  "textClasses": {
+    "callout": {
+      "fontSize": 30,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#1D1D1B"
+    },
+    "title": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#1D1D1B"
+    },
+    "header": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#1D1D1B"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Segoe UI",
+      "color": "#5F5F5A"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "fontColor": {
+              "solid": {
+                "color": "#1D1D1B"
+              }
+            },
+            "fontSize": 12,
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F3F4F6"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F3F4F6"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+/// Disconnected table driving the Sales / Profit / Quantity switch.
+table Metric
+	lineageTag: be285a02-d9d1-4f2d-bf6c-a8fffa1b5b28
+
+	column Metric
+		lineageTag: d6cda422-dcaf-447b-be8a-ddac8d30f064
+		isNameInferred
+		sourceColumn: [Metric]
+		sortByColumn: 'Metric Order'
+
+	column 'Metric Order'
+		isHidden
+		lineageTag: dc37abe7-48d4-49d9-94dc-b0973bf9fcf7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Metric Order]
+
+	partition Metric = calculated
+		mode: import
+		source = DATATABLE ( "Metric", STRING, "Metric Order", INTEGER, { { "Sales", 1 }, { "Profit", 2 }, { "Quantity", 3 } } )
+
