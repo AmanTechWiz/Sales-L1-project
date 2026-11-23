@@ -40,6 +40,3 @@ git commit -m "Update Sales report"
 git push origin main
 ```
 
-## Source Data
-
-The source workbook contains the Orders and People data used by the model. Personal notes and implementation plans are intentionally excluded with `plan.md`.
