@@ -43,7 +43,6 @@ table Date
 		sortByColumn: 'Month Year Sort'
 
 	column 'Month Year Sort'
-		isHidden
 		lineageTag: 39434872-4112-4bde-a63e-5506073e2e54
 		summarizeBy: none
 		isNameInferred

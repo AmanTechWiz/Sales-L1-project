@@ -11,11 +11,15 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
 
+annotation PBI_QueryOrder = ["Orders","People"]
+
 ref table Orders
 ref table People
 ref table Date
 ref table Metric
 ref table _Measures
+ref table DateTableTemplate_a1064300-4cce-40f2-96ff-2552aa6cefb2
+ref table LocalDateTable_3d4f51fd-f823-4980-8fcc-e501901bebff
 
 ref cultureInfo en-US
 

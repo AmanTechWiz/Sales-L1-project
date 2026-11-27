@@ -16,7 +16,7 @@ table People
 		mode: import
 		source =
 				let
-				    Source = Excel.Workbook(File.Contents("C:\Users\amande\OneDrive - Capgemini\Desktop\Sales\Sample - Superstore.xls"), null, true),
+				    Source = Excel.Workbook(File.Contents("C:\Users\debmdebn\OneDrive - Capgemini\Desktop\L1\Sales-L1-project\Sample - Superstore.xls"), null, true),
 				    PeopleSheet = Source{[Name="People"]}[Data],
 				    Promoted = Table.PromoteHeaders(PeopleSheet, [PromoteAllScalars=true]),
 				    NonBlank = Table.SelectRows(Promoted, each [Region] <> null and [Region] <> ""),

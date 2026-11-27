@@ -6,3 +6,8 @@ relationship Orders_Region_People
 	fromColumn: Orders.Region
 	toColumn: People.Region
 
+relationship e9e49c17-30c0-4513-bd75-01a0a5b1393d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Orders.'Ship Date'
+	toColumn: LocalDateTable_3d4f51fd-f823-4980-8fcc-e501901bebff.Date
+
